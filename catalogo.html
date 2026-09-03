@@ -1,6 +1,3 @@
-
-
-Proposito jeans catalogo · HTML
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -48,13 +45,13 @@ Proposito jeans catalogo · HTML
   input,textarea,select{font-family:inherit; font-size:16px;}
   a{color:inherit;}
   ::selection{background:var(--caramel); color:#fff;}
- 
+
   .serif{font-family:'Fraunces',serif;}
- 
+
   /* ---------- layout shell ---------- */
   #root{min-height:100vh; display:flex; flex-direction:column;}
   .shell{width:100%; max-width:1180px; margin:0 auto; padding:0 20px;}
- 
+
   /* ---------- header ---------- */
   .topbar{
     position:sticky; top:0; z-index:40;
@@ -88,7 +85,7 @@ Proposito jeans catalogo · HTML
     background:var(--caramel); color:#fff; font-size:10px; font-weight:700; line-height:16px;
     border-radius:99px; text-align:center;
   }
- 
+
   .search-row{
     overflow:hidden; max-height:0; transition:max-height .28s var(--ease);
   }
@@ -101,7 +98,7 @@ Proposito jeans catalogo · HTML
   .search-box svg{width:18px; height:18px; color:var(--stone); flex:none;}
   .search-box input{border:none; outline:none; width:100%; background:transparent; font-size:15px; color:var(--ink);}
   .search-box input::placeholder{color:var(--stone-light);}
- 
+
   /* ---------- hero ---------- */
   .hero{
     position:relative; padding:52px 20px 34px; text-align:center; overflow:hidden;
@@ -122,7 +119,7 @@ Proposito jeans catalogo · HTML
   .hero p{
     font-size:16px; color:var(--coffee-700); max-width:32ch; margin:0 auto;
   }
- 
+
   /* ---------- category chips ---------- */
   .chip-scroller{
     display:flex; gap:8px; overflow-x:auto; padding:18px 20px 4px;
@@ -136,7 +133,7 @@ Proposito jeans catalogo · HTML
   }
   .chip.active{background:var(--coffee-900); border-color:var(--coffee-900); color:#fff;}
   .chip:hover:not(.active){border-color:var(--coffee-700);}
- 
+
   /* ---------- toolbar (filter/sort row) ---------- */
   .toolbar{
     display:flex; align-items:center; justify-content:space-between;
@@ -152,7 +149,7 @@ Proposito jeans catalogo · HTML
     background:var(--caramel); color:#fff; font-size:11px; font-weight:700;
     border-radius:999px; min-width:16px; height:16px; display:inline-flex; align-items:center; justify-content:center; padding:0 4px;
   }
- 
+
   /* ---------- grid ---------- */
   .grid{
     display:grid; grid-template-columns:repeat(2, 1fr); gap:16px;
@@ -160,7 +157,7 @@ Proposito jeans catalogo · HTML
   }
   @media(min-width:640px){ .grid{grid-template-columns:repeat(3,1fr);} }
   @media(min-width:960px){ .grid{grid-template-columns:repeat(4,1fr); gap:20px;} }
- 
+
   .card{
     background:var(--paper); border-radius:var(--radius-l); overflow:hidden;
     border:1px solid rgba(43,30,20,.07);
@@ -185,14 +182,14 @@ Proposito jeans catalogo · HTML
   .card-price{font-size:14.5px; font-weight:700; color:var(--coffee-900);}
   .card-price.empty{font-size:12px; font-weight:500; color:var(--stone);}
   .card-link{font-size:12.5px; font-weight:600; color:var(--caramel-dark);}
- 
+
   /* ---------- skeleton ---------- */
   .sk-card{background:var(--paper); border-radius:var(--radius-l); overflow:hidden; border:1px solid rgba(43,30,20,.06);}
   .sk-media{aspect-ratio:3/4; background:linear-gradient(90deg,#E6E3D9 25%,#EFEDE4 37%,#E6E3D9 63%); background-size:400% 100%; animation:shimmer 1.4s ease infinite;}
   .sk-line{height:10px; border-radius:4px; margin:12px 13px; background:linear-gradient(90deg,#E6E3D9 25%,#EFEDE4 37%,#E6E3D9 63%); background-size:400% 100%; animation:shimmer 1.4s ease infinite;}
   .sk-line.w60{width:60%;}
   @keyframes shimmer{0%{background-position:100% 0;}100%{background-position:-100% 0;}}
- 
+
   /* ---------- empty state ---------- */
   .empty-state{
     grid-column:1/-1; text-align:center; padding:56px 20px; color:var(--stone);
@@ -200,7 +197,7 @@ Proposito jeans catalogo · HTML
   .empty-state svg{width:44px; height:44px; color:var(--coffee-300); margin-bottom:14px;}
   .empty-state h3{font-family:'Fraunces',serif; font-size:19px; color:var(--coffee-900); margin-bottom:6px; font-weight:520;}
   .empty-state p{font-size:14px; max-width:34ch; margin:0 auto;}
- 
+
   /* ---------- footer ---------- */
   .site-footer{
     margin-top:auto; border-top:1px solid rgba(43,30,20,.09); padding:26px 20px 32px;
@@ -213,7 +210,7 @@ Proposito jeans catalogo · HTML
   }
   .footer-admin svg{width:13px; height:13px;}
   .footer-admin:hover{color:var(--coffee-700);}
- 
+
   /* ---------- buttons ---------- */
   .btn{
     display:inline-flex; align-items:center; justify-content:center; gap:8px;
@@ -231,7 +228,7 @@ Proposito jeans catalogo · HTML
   .btn-sm{padding:9px 14px; font-size:13px; width:auto;}
   .btn[disabled]{opacity:.5; pointer-events:none;}
   .btn svg{width:18px; height:18px; flex:none;}
- 
+
   /* ---------- full screen views ---------- */
   .view{animation:fadein .22s var(--ease);}
   @keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
@@ -247,7 +244,7 @@ Proposito jeans catalogo · HTML
   }
   .back-btn:hover{background:rgba(43,30,20,.06);}
   .back-btn svg{width:19px; height:19px;}
- 
+
   /* ---------- product detail ---------- */
   .pd-media{aspect-ratio:4/5; background:var(--latte-100); max-height:520px;}
   .pd-media img{width:100%; height:100%; object-fit:cover;}
@@ -258,6 +255,7 @@ Proposito jeans catalogo · HTML
   .pd-meta{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px;}
   .meta-pill{font-size:12.5px; background:var(--latte-100); color:var(--coffee-800); padding:6px 12px; border-radius:999px; font-weight:500;}
   .pd-section-label{font-size:12.5px; font-weight:600; color:var(--coffee-700); letter-spacing:.02em; margin-bottom:8px;}
+  .pd-section-hint{font-weight:500; color:var(--stone); text-transform:none; letter-spacing:0;}
   .pd-desc{font-size:15px; color:#3A3A38; line-height:1.65; margin-bottom:24px;}
   .size-row{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:26px;}
   .size-pill{
@@ -279,7 +277,7 @@ Proposito jeans catalogo · HTML
     border-top:1px solid rgba(43,30,20,.09); padding:12px 20px calc(12px + env(safe-area-inset-bottom));
   }
   .pd-fixed-bar .shell{max-width:640px; display:flex; gap:10px; padding:0;}
- 
+
   /* ---------- FAB ---------- */
   .fab{
     position:fixed; right:18px; bottom:18px; z-index:36;
@@ -288,7 +286,7 @@ Proposito jeans catalogo · HTML
   }
   .fab svg{width:26px; height:26px;}
   .fab:hover{filter:brightness(1.06);}
- 
+
   /* ---------- overlay / bottom sheet ---------- */
   .overlay{
     position:fixed; inset:0; background:rgba(43,30,20,.42); z-index:50;
@@ -310,7 +308,7 @@ Proposito jeans catalogo · HTML
     position:sticky; bottom:0; background:var(--paper); border-top:1px solid rgba(43,30,20,.08);
     padding:14px 20px calc(14px + env(safe-area-inset-bottom)); display:flex; gap:10px;
   }
- 
+
   .filter-group{margin-bottom:20px;}
   .filter-group h4{font-size:12.5px; font-weight:600; color:var(--coffee-700); letter-spacing:.02em; margin-bottom:10px;}
   .filter-options{display:flex; flex-wrap:wrap; gap:8px;}
@@ -319,7 +317,7 @@ Proposito jeans catalogo · HTML
     font-size:13px; font-weight:500; color:var(--coffee-900);
   }
   .opt-chip.on{background:var(--coffee-900); border-color:var(--coffee-900); color:#fff;}
- 
+
   /* ---------- centered modal (login / confirm) ---------- */
   .modal-center{
     position:fixed; inset:0; z-index:52; display:flex; align-items:center; justify-content:center; padding:20px;
@@ -335,7 +333,7 @@ Proposito jeans catalogo · HTML
   .modal-center.open .modal-card{transform:scale(1);}
   .modal-card h3{font-family:'Fraunces',serif; font-size:20px; font-weight:520; color:var(--coffee-900); margin-bottom:6px;}
   .modal-card p.sub{font-size:13.5px; color:var(--stone); margin-bottom:20px;}
- 
+
   /* ---------- form elements ---------- */
   .field{margin-bottom:16px;}
   .field label{display:block; font-size:12.5px; font-weight:600; color:var(--coffee-700); margin-bottom:6px; letter-spacing:.01em;}
@@ -346,7 +344,7 @@ Proposito jeans catalogo · HTML
   .field input:focus, .field textarea:focus, .field select:focus{border-color:var(--coffee-700);}
   .field textarea{resize:vertical; min-height:76px; line-height:1.5;}
   .field-hint{font-size:11.5px; color:var(--stone); margin-top:5px;}
- 
+
   .photo-picker{display:flex; flex-direction:column; gap:10px; margin-bottom:10px;}
   .photo-preview{
     position:relative; aspect-ratio:3/4; max-width:180px; border-radius:var(--radius-m);
@@ -376,7 +374,7 @@ Proposito jeans catalogo · HTML
   .switch input:checked + .track{background:var(--coffee-700);}
   .switch input:checked + .track::after{transform:translateX(18px);}
   .error-text{font-size:13px; color:var(--danger); background:rgba(163,64,46,.08); border-radius:var(--radius-m); padding:9px 12px; margin-bottom:16px;}
- 
+
   /* ---------- admin dashboard ---------- */
   .admin-toolbar{padding:16px 20px 6px; display:flex; gap:10px; align-items:center;}
   .admin-toolbar .search-box{flex:1; margin-bottom:0;}
@@ -393,7 +391,7 @@ Proposito jeans catalogo · HTML
   .admin-row-actions{display:flex; gap:2px; flex:none;}
   .admin-fab{position:fixed; right:18px; bottom:18px; z-index:36;}
   .admin-fab .btn{border-radius:999px; padding:15px 22px; box-shadow:var(--shadow-2); width:auto;}
- 
+
   /* ---------- cart ---------- */
   .cart-row{display:flex; gap:12px; padding:14px 0; border-bottom:1px solid rgba(43,30,20,.08);}
   .cart-row:first-child{padding-top:2px;}
@@ -421,7 +419,7 @@ Proposito jeans catalogo · HTML
   .cart-total-row .ctv{font-size:17px; font-weight:700;}
   .cart-total-row .muted{font-size:12.5px; font-weight:500; color:var(--stone);}
   .cart-foot-actions{display:flex; gap:10px;}
- 
+
   /* ---------- toast ---------- */
   .toast-wrap{position:fixed; left:0; right:0; bottom:22px; z-index:60; display:flex; justify-content:center; pointer-events:none; padding:0 20px;}
   .toast{
@@ -431,12 +429,12 @@ Proposito jeans catalogo · HTML
   }
   .toast.show{opacity:1; transform:none;}
   .toast svg{width:16px; height:16px; flex:none;}
- 
+
   /* ---------- reduced motion ---------- */
   @media (prefers-reduced-motion: reduce){
     *{animation-duration:.001s !important; transition-duration:.001s !important;}
   }
- 
+
   @media(min-width:760px){
     .hero h1{font-size:46px;}
     .pd-media{border-radius:0 0 var(--radius-l) var(--radius-l);}
@@ -445,18 +443,18 @@ Proposito jeans catalogo · HTML
 </head>
 <body>
 <div id="root"></div>
- 
+
 <script>
 (function(){
   "use strict";
- 
+
   /* ============ CONFIG (edite aqui) ============ */
   var ADMIN_USER = "admin";
   var ADMIN_PASS = "proposito2026";
-  var WHATSAPP_NUMBER = "5548999893316"; // 
+  var WHATSAPP_NUMBER = "5548999893316"; // troque pelo número real (só dígitos, com DDI+DDD)
   var STORAGE_KEY = "proposito-jeans-catalogo-v1";
   var CART_STORAGE_KEY = "proposito-jeans-carrinho-v1";
- 
+
   var MODELAGENS = ["Skinny","Reta","Wide Leg","Flare","Mom","Boyfriend","Slim","Reta Ampla","Jogger"];
   var CORES = ["Azul Claro","Azul Médio","Azul Escuro","Preto","Cinza","Branco","Destroyed","Stone"];
   var TAMANHOS_PADRAO = ["34","36","38","40","42","44"];
@@ -464,7 +462,7 @@ Proposito jeans catalogo · HTML
     "Azul Claro":"#7FA0C4","Azul Médio":"#4A6E93","Azul Escuro":"#22415F",
     "Preto":"#26292E","Cinza":"#8C9096","Branco":"#DAD6C9","Destroyed":"#6488AC","Stone":"#A79C87"
   };
- 
+
   /* ============ ICONS ============ */
   var ICON = {
     search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>',
@@ -483,7 +481,7 @@ Proposito jeans catalogo · HTML
     cart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6L5 3H2"/><circle cx="9.5" cy="20" r="1.4" fill="currentColor" stroke="none"/><circle cx="17.5" cy="20" r="1.4" fill="currentColor" stroke="none"/></svg>',
     minus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14"/></svg>'
   };
- 
+
   function jeansIllustration(hex, big){
     hex = hex || "#4A6E93";
     var w = big ? 400 : 300, h = big ? 500 : 375;
@@ -499,7 +497,7 @@ Proposito jeans catalogo · HTML
       '<path d="M-64,-16 L64,-16" stroke="rgba(43,30,20,.22)" stroke-width="1.2" stroke-dasharray="3 3"/>'+
       '</g></svg>';
   }
- 
+
   /* ============ STATE ============ */
   var state = {
     view: "catalog",
@@ -524,9 +522,9 @@ Proposito jeans catalogo · HTML
     shareCopied: false,
     cart: [],
     cartOpen: false,
-    selectedSize: null
+    selectedSizes: []
   };
- 
+
   function normalize(s){
     return (s||"").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
   }
@@ -546,7 +544,7 @@ Proposito jeans catalogo · HTML
     if(isNaN(d)) return false;
     return (Date.now() - d) < (1000*60*60*24*45); // 45 dias
   }
- 
+
   function seedProducts(){
     var now = Date.now();
     function d(daysAgo){ return new Date(now - daysAgo*86400000).toISOString(); }
@@ -561,7 +559,7 @@ Proposito jeans catalogo · HTML
       {id:uid(), nome:"Calça Jeans Flare Azul Médio", referencia:"PJ-008", descricao:"Modelagem flare com cintura alta e barra levemente alargada a partir do joelho, resgatando a estética setentista com um toque atual.", foto:"", tamanhos:["36","38","40","42"], preco:219.9, modelagem:"Flare", corLavagem:"Azul Médio", novidade:false, maisVendido:true, dataCadastro:d(75)}
     ];
   }
- 
+
   /* ============ STORAGE ============ */
   function loadProducts(){
     window.storage.get(STORAGE_KEY, true).then(function(res){
@@ -586,7 +584,7 @@ Proposito jeans catalogo · HTML
       if(!silent) render();
     });
   }
- 
+
   function loadCart(){
     window.storage.get(CART_STORAGE_KEY, false).then(function(res){
       state.cart = res && res.value ? JSON.parse(res.value) : [];
@@ -596,7 +594,7 @@ Proposito jeans catalogo · HTML
   function saveCart(){
     window.storage.set(CART_STORAGE_KEY, JSON.stringify(state.cart), false).catch(function(){});
   }
- 
+
   /* ============ ROUTING (in-memory, no hash — reliable inside the artifact iframe) ============ */
   function showToast(msg){
     state.toast = msg;
@@ -607,13 +605,13 @@ Proposito jeans catalogo · HTML
   window.openProduct = function(id){
     state.returnView = state.view === "detail" ? (state.returnView || "catalog") : state.view;
     state.selectedProductId = id;
-    state.selectedSize = null;
+    state.selectedSizes = [];
     state.view = "detail";
     render(); window.scrollTo(0,0);
   };
   window.goBack = function(){
     if(state.view === "admin-form"){ closeForm(); return; }
-    if(state.view === "detail"){ state.view = state.returnView || "catalog"; state.selectedProductId = null; state.selectedSize = null; render(); window.scrollTo(0,0); return; }
+    if(state.view === "detail"){ state.view = state.returnView || "catalog"; state.selectedProductId = null; state.selectedSizes = []; render(); window.scrollTo(0,0); return; }
     // admin-login / admin-dashboard and anything else -> exit to public catalog
     state.view = "catalog";
     render(); window.scrollTo(0,0);
@@ -621,7 +619,7 @@ Proposito jeans catalogo · HTML
   window.toggleSearch = function(){ state.searchOpen = !state.searchOpen; render(); if(state.searchOpen){ setTimeout(function(){ var el=document.getElementById('search-input'); if(el) el.focus(); },10);} };
   window.setSearch = function(v){ state.searchQuery = v; render(); };
   window.setCategory = function(cat){ state.activeCategory = cat; render(); window.scrollTo({top:0,behavior:'smooth'}); };
- 
+
   window.openFilters = function(){
     state.tempFilters = JSON.parse(JSON.stringify(state.filters));
     state.filterSheetOpen = true; render();
@@ -639,7 +637,7 @@ Proposito jeans catalogo · HTML
   window.clearFilters = function(){
     state.tempFilters = {tamanho:[],modelagem:[],corLavagem:[]}; render();
   };
- 
+
   window.shareProduct = function(id){
     var p = state.products.find(function(x){return x.id===id;});
     var text = p ? (p.nome + " — Ref. " + p.referencia + " — Propósito Jeans") : "Propósito Jeans";
@@ -651,29 +649,33 @@ Proposito jeans catalogo · HTML
       showToast(text);
     }
   };
- 
+
   /* ============ CART ============ */
   window.selectSize = function(sz){
-    state.selectedSize = (state.selectedSize === sz) ? null : sz;
+    var arr = state.selectedSizes;
+    var idx = arr.indexOf(sz);
+    if(idx>-1) arr.splice(idx,1); else arr.push(sz);
     render();
   };
   window.addToCart = function(id){
     var p = state.products.find(function(x){return x.id===id;});
     if(!p) return;
-    if(!state.selectedSize){ showToast("Escolha um tamanho antes de adicionar."); return; }
-    var size = state.selectedSize;
-    var existing = state.cart.find(function(it){ return it.productId===id && it.tamanho===size; });
-    if(existing){
-      existing.qty += 1;
-    } else {
-      state.cart.push({
-        cartId: uid(), productId: id, nome: p.nome, referencia: p.referencia,
-        tamanho: size, preco: p.preco, foto: p.foto, corLavagem: p.corLavagem, qty: 1
-      });
-    }
+    if(!state.selectedSizes.length){ showToast("Escolha ao menos um tamanho antes de adicionar."); return; }
+    state.selectedSizes.forEach(function(size){
+      var existing = state.cart.find(function(it){ return it.productId===id && it.tamanho===size; });
+      if(existing){
+        existing.qty += 1;
+      } else {
+        state.cart.push({
+          cartId: uid(), productId: id, nome: p.nome, referencia: p.referencia,
+          tamanho: size, preco: p.preco, foto: p.foto, corLavagem: p.corLavagem, qty: 1
+        });
+      }
+    });
+    var n = state.selectedSizes.length;
     saveCart();
-    state.selectedSize = null;
-    showToast("Adicionado ao carrinho.");
+    state.selectedSizes = [];
+    showToast(n === 1 ? "Adicionado ao carrinho." : n + " tamanhos adicionados ao carrinho.");
     render();
   };
   window.removeFromCart = function(cartId){
@@ -719,7 +721,7 @@ Proposito jeans catalogo · HTML
     var msg = encodeURIComponent(buildOrderMessage());
     window.open("https://wa.me/"+WHATSAPP_NUMBER+"?text="+msg, "_blank", "noopener");
   };
- 
+
   window.goAdmin = function(){
     state.view = state.isAdmin ? "admin-dashboard" : "admin-login";
     render(); window.scrollTo(0,0);
@@ -738,9 +740,9 @@ Proposito jeans catalogo · HTML
       render();
     }
   };
- 
+
   window.setAdminSearch = function(v){ state.adminSearch = v; render(); };
- 
+
   function emptyForm(){
     return {nome:"", referencia:"", descricao:"", foto:"", tamanhos:[], preco:"", modelagem:MODELAGENS[0], corLavagem:CORES[0], novidade:false, maisVendido:false};
   }
@@ -811,7 +813,7 @@ Proposito jeans catalogo · HTML
     render();
   };
   window.toggleFormBool = function(k){ state.formState[k] = !state.formState[k]; render(); };
- 
+
   window.saveProduct = function(){
     var f = state.formState;
     f.nome = document.getElementById('f-nome').value.trim();
@@ -820,14 +822,14 @@ Proposito jeans catalogo · HTML
     f.preco = document.getElementById('f-preco').value.trim();
     f.modelagem = document.getElementById('f-modelagem').value;
     f.corLavagem = document.getElementById('f-cor').value;
- 
+
     if(!f.nome){ state.formError = "Informe o nome do produto."; render(); return; }
     if(!f.referencia){ state.formError = "Informe a referência/código."; render(); return; }
     if(!f.tamanhos.length){ state.formError = "Selecione ao menos um tamanho disponível."; render(); return; }
- 
+
     var precoNum = f.preco === "" ? null : Number(f.preco.replace(",", "."));
     if(f.preco !== "" && isNaN(precoNum)){ state.formError = "Preço inválido."; render(); return; }
- 
+
     if(state.editingId){
       var idx = state.products.findIndex(function(x){return x.id===state.editingId;});
       if(idx>-1){
@@ -852,7 +854,7 @@ Proposito jeans catalogo · HTML
     state.formState = null; state.editingId = null; state.formError="";
     state.view = "admin-dashboard"; render();
   };
- 
+
   window.askDelete = function(id){ state.deleteConfirmId = id; render(); };
   window.cancelDelete = function(){ state.deleteConfirmId = null; render(); };
   window.confirmDelete = function(){
@@ -862,16 +864,16 @@ Proposito jeans catalogo · HTML
     saveProducts(state.products).then(function(){ showToast("Produto excluído."); });
     render();
   };
- 
+
   /* ============ FILTER LOGIC ============ */
   function getFilteredProducts(){
     var list = state.products.slice();
     if(state.activeCategory==='novidades') list = list.filter(function(p){return p.novidade || timeAgoIsNew(p.dataCadastro);});
     else if(state.activeCategory==='maisvendidos') list = list.filter(function(p){return p.maisVendido;});
- 
+
     var q = normalize(state.searchQuery.trim());
     if(q) list = list.filter(function(p){ return normalize(p.nome).indexOf(q)>-1 || normalize(p.referencia).indexOf(q)>-1; });
- 
+
     var f = state.filters;
     if(f.tamanho.length) list = list.filter(function(p){ return p.tamanhos.some(function(t){return f.tamanho.indexOf(t)>-1;}); });
     if(f.modelagem.length) list = list.filter(function(p){ return f.modelagem.indexOf(p.modelagem)>-1; });
@@ -882,7 +884,7 @@ Proposito jeans catalogo · HTML
     var f = state.filters;
     return f.tamanho.length + f.modelagem.length + f.corLavagem.length;
   }
- 
+
   /* ============ RENDER: PARTIALS ============ */
   function renderHeader(showBack, title, showCart){
     if(showCart === undefined) showCart = true;
@@ -910,7 +912,7 @@ Proposito jeans catalogo · HTML
       '</div>'+
     '</div></div>';
   }
- 
+
   function renderHero(){
     return '<div class="hero">'+
       '<div class="hero-eyebrow"><span class="dash"></span>Loja de jeans<span class="dash"></span></div>'+
@@ -918,14 +920,14 @@ Proposito jeans catalogo · HTML
       '<p>Calças jeans e peças em denim selecionadas com foco em caimento, durabilidade e um jeitinho de vestir todo dia.</p>'+
     '</div>';
   }
- 
+
   function renderChips(){
     var cats = [["todos","Todos os produtos"],["novidades","Novidades"],["maisvendidos","Mais vendidos"]];
     return '<div class="chip-scroller">' + cats.map(function(c){
       return '<button class="chip'+(state.activeCategory===c[0]?' active':'')+'" onclick="setCategory(\''+c[0]+'\')">'+c[1]+'</button>';
     }).join('') + '</div>';
   }
- 
+
   function renderToolbar(filtered){
     var count = activeFilterCount();
     return '<div class="toolbar">'+
@@ -933,7 +935,7 @@ Proposito jeans catalogo · HTML
       '<button class="filter-btn" onclick="openFilters()">'+ICON.filter+'Filtrar'+(count?'<span class="filter-badge">'+count+'</span>':'')+'</button>'+
     '</div>';
   }
- 
+
   function renderCard(p){
     var price = money(p.preco);
     var img = p.foto ? '<img src="'+escapeAttr(p.foto)+'" alt="'+escapeAttr(p.nome)+'" loading="lazy">' : jeansIllustration(COR_HEX[p.corLavagem]);
@@ -951,7 +953,7 @@ Proposito jeans catalogo · HTML
       '</div>'+
     '</button>';
   }
- 
+
   function renderSkeletons(){
     var out = '';
     for(var i=0;i<6;i++){
@@ -959,14 +961,14 @@ Proposito jeans catalogo · HTML
     }
     return out;
   }
- 
+
   function renderEmpty(){
     return '<div class="empty-state">'+ICON.box+
       '<h3 class="serif">Nenhum produto encontrado</h3>'+
       '<p>Tente ajustar a busca ou remover alguns filtros para ver mais opções do catálogo.</p>'+
     '</div>';
   }
- 
+
   function renderGrid(){
     if(state.loading){
       return '<div class="grid">'+renderSkeletons()+'</div>';
@@ -975,7 +977,7 @@ Proposito jeans catalogo · HTML
     var cardsHtml = filtered.length ? filtered.map(renderCard).join('') : renderEmpty();
     return renderToolbar(filtered) + '<div class="grid">'+cardsHtml+'</div>';
   }
- 
+
   function renderFooter(){
     return '<div class="site-footer">'+
       '<div class="fmark serif">Propósito Jeans</div>'+
@@ -983,12 +985,12 @@ Proposito jeans catalogo · HTML
       '<button class="footer-admin" onclick="goAdmin()">'+ICON.lock+'Área administrativa</button>'+
     '</div>';
   }
- 
+
   function renderFab(){
     var msg = encodeURIComponent("Olá! Vim do catálogo da Propósito Jeans e gostaria de saber mais.");
     return '<a class="fab" href="https://wa.me/'+WHATSAPP_NUMBER+'?text='+msg+'" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">'+ICON.whatsapp+'</a>';
   }
- 
+
   function renderCatalog(){
     return '<div class="view">'+
       renderHeader(false)+
@@ -999,7 +1001,7 @@ Proposito jeans catalogo · HTML
       renderFab()+
     '</div>';
   }
- 
+
   /* ---------- product detail ---------- */
   function renderDetail(){
     var p = state.products.find(function(x){return x.id===state.selectedProductId;});
@@ -1020,20 +1022,20 @@ Proposito jeans catalogo · HTML
         '</div>'+
         '<div class="pd-section-label">Descrição</div>'+
         '<p class="pd-desc">'+escapeAttr(p.descricao)+'</p>'+
-        '<div class="pd-section-label">Escolha o tamanho</div>'+
+        '<div class="pd-section-label">Escolha os tamanhos <span class="pd-section-hint">(pode marcar mais de um)</span></div>'+
         '<div class="size-row">'+p.tamanhos.map(function(t){
-          var sel = state.selectedSize === t;
+          var sel = state.selectedSizes.indexOf(t) > -1;
           return '<button type="button" class="size-pill'+(sel?' selected':'')+'" onclick="selectSize(\''+t+'\')">'+t+'</button>';
         }).join('')+'</div>'+
         '<a class="pd-whatsapp-link" href="https://wa.me/'+WHATSAPP_NUMBER+'?text='+msg+'" target="_blank" rel="noopener">'+ICON.whatsapp+' Prefere perguntar direto? Fale no WhatsApp</a>'+
       '</div>'+
       '<div class="pd-fixed-bar"><div class="shell">'+
         '<button class="btn btn-ghost" style="width:auto;padding:13px 16px" onclick="shareProduct(\''+p.id+'\')" aria-label="Compartilhar">'+ICON.share+'</button>'+
-        '<button class="btn btn-primary" onclick="addToCart(\''+p.id+'\')">'+ICON.cart+' Adicionar ao carrinho</button>'+
+        '<button class="btn btn-primary" onclick="addToCart(\''+p.id+'\')">'+ICON.cart+' Adicionar'+(state.selectedSizes.length>1 ? ' '+state.selectedSizes.length+' tamanhos' : '')+' ao carrinho</button>'+
       '</div></div>'+
     '</div>';
   }
- 
+
   /* ---------- filter sheet ---------- */
   function renderFilterGroup(label, key, options){
     var arr = state.tempFilters[key];
@@ -1062,7 +1064,7 @@ Proposito jeans catalogo · HTML
         '</div>'+
       '</div>';
   }
- 
+
   /* ---------- cart sheet ---------- */
   function renderCartItem(it){
     var priceTxt = (it.preco!==null && it.preco!==undefined) ? money(it.preco) : null;
@@ -1102,7 +1104,7 @@ Proposito jeans catalogo · HTML
         '</div>' : '')+
       '</div>';
   }
- 
+
   /* ---------- admin login ---------- */
   function renderAdminLogin(){
     return '<div class="view">'+
@@ -1122,7 +1124,7 @@ Proposito jeans catalogo · HTML
       '</div>'+
     '</div>';
   }
- 
+
   /* ---------- admin dashboard ---------- */
   function renderAdminDashboard(){
     var q = normalize(state.adminSearch.trim());
@@ -1141,7 +1143,7 @@ Proposito jeans catalogo · HTML
         '</div>'+
       '</div>';
     }).join('');
- 
+
     return '<div class="view">'+
       renderHeader(true, "Painel administrativo", false)+
       '<div class="admin-toolbar shell" style="max-width:760px">'+
@@ -1154,7 +1156,7 @@ Proposito jeans catalogo · HTML
       '<div class="admin-fab"><button class="btn btn-copper" onclick="openNewProduct()">'+ICON.plus+' Adicionar</button></div>'+
     '</div>';
   }
- 
+
   /* ---------- admin form ---------- */
   function selectOptions(list, selected){
     return list.map(function(o){ return '<option value="'+o+'"'+(o===selected?' selected':'')+'>'+o+'</option>'; }).join('');
@@ -1167,7 +1169,7 @@ Proposito jeans catalogo · HTML
       renderHeader(true, isEdit ? "Editar produto" : "Adicionar produto", false)+
       '<div style="max-width:560px;margin:0 auto;padding:18px 20px 60px;">'+
         (state.formError ? '<div class="error-text">'+state.formError+'</div>' : '')+
- 
+
         '<div class="field"><label>Foto do produto</label>'+
           '<div class="photo-picker">'+
             '<div class="photo-preview">'+(state.formPhotoLoading ? '<div class="photo-loading">Processando foto…</div>' : previewImg)+
@@ -1179,29 +1181,29 @@ Proposito jeans catalogo · HTML
           '</div>'+
           '<div class="field-hint">Escolha uma foto da galeria do celular. Sem foto? A peça aparece com uma ilustração no lugar dela.</div>'+
         '</div>'+
- 
+
         '<div class="field"><label for="f-nome">Nome do produto</label><input id="f-nome" type="text" placeholder="Ex: Calça Jeans Skinny Cintura Alta" value="'+escapeAttr(f.nome)+'" oninput="setFormField(\'nome\', this.value)"></div>'+
         '<div class="field"><label for="f-ref">Referência / código</label><input id="f-ref" type="text" placeholder="Ex: PJ-009" value="'+escapeAttr(f.referencia)+'" oninput="setFormField(\'referencia\', this.value)"></div>'+
         '<div class="field"><label for="f-descricao">Descrição</label><textarea id="f-descricao" placeholder="Conte sobre o tecido, o caimento, a lavagem e outros detalhes da peça." oninput="setFormField(\'descricao\', this.value)">'+escapeAttr(f.descricao)+'</textarea></div>'+
- 
+
         '<div class="row2">'+
           '<div class="field"><label for="f-preco">Preço (opcional)</label><input id="f-preco" type="text" inputmode="decimal" placeholder="Ex: 189,90" value="'+escapeAttr(f.preco)+'" oninput="setFormField(\'preco\', this.value)"></div>'+
           '<div class="field"><label for="f-modelagem">Modelagem</label><select id="f-modelagem" onchange="setFormField(\'modelagem\', this.value)">'+selectOptions(MODELAGENS, f.modelagem)+'</select></div>'+
         '</div>'+
         '<div class="field"><label for="f-cor">Cor / lavagem</label><select id="f-cor" onchange="setFormField(\'corLavagem\', this.value); render()">'+selectOptions(CORES, f.corLavagem)+'</select></div>'+
- 
+
         '<div class="field"><label>Tamanhos disponíveis</label>'+
           '<div class="filter-options">'+TAMANHOS_PADRAO.map(function(t){
             var on = f.tamanhos.indexOf(t)>-1;
             return '<button type="button" class="opt-chip'+(on?' on':'')+'" onclick="toggleFormSize(\''+t+'\')">'+t+'</button>';
           }).join('')+'</div>'+
         '</div>'+
- 
+
         '<div class="toggle-row"><div><div class="t-label">Marcar como novidade</div><div class="t-sub">Aparece na categoria "Novidades"</div></div>'+
           '<label class="switch"><input type="checkbox" '+(f.novidade?'checked':'')+' onchange="toggleFormBool(\'novidade\')"><span class="track"></span></label></div>'+
         '<div class="toggle-row"><div><div class="t-label">Marcar como mais vendido</div><div class="t-sub">Aparece na categoria "Mais vendidos"</div></div>'+
           '<label class="switch"><input type="checkbox" '+(f.maisVendido?'checked':'')+' onchange="toggleFormBool(\'maisVendido\')"><span class="track"></span></label></div>'+
- 
+
         '<div style="display:flex;gap:10px;margin-top:24px;">'+
           '<button class="btn btn-ghost" onclick="closeForm()">Cancelar</button>'+
           '<button class="btn btn-primary" onclick="saveProduct()">Salvar produto</button>'+
@@ -1209,7 +1211,7 @@ Proposito jeans catalogo · HTML
       '</div>'+
     '</div>';
   }
- 
+
   /* ---------- delete confirm ---------- */
   function renderDeleteConfirm(){
     var open = !!state.deleteConfirmId;
@@ -1225,12 +1227,12 @@ Proposito jeans catalogo · HTML
       '</div>'+
     '</div>';
   }
- 
+
   function renderToast(){
     if(!state.toast) return '<div class="toast-wrap"></div>';
     return '<div class="toast-wrap"><div class="toast show">'+ICON.check+state.toast+'</div></div>';
   }
- 
+
   /* ============ MAIN RENDER ============ */
   function buildHTML(){
     var body = "";
@@ -1243,7 +1245,7 @@ Proposito jeans catalogo · HTML
     }
     return body + renderFilterSheet() + renderCartSheet() + renderDeleteConfirm() + renderToast();
   }
- 
+
   var root = document.getElementById('root');
   function render(){
     var active = document.activeElement;
@@ -1259,14 +1261,13 @@ Proposito jeans catalogo · HTML
       }
     }
   }
- 
+
   /* ============ INIT ============ */
   render();
   loadProducts();
   loadCart();
- 
+
 })();
 </script>
 </body>
 </html>
- 
