@@ -1,0 +1,6 @@
+  var WHATSAPP_NUMBER = "5548999893316"; // 55 + DDD + número, só dígitos
+  var ADMIN_USER = "admin";
+  var ADMIN_PASS = "proposito2026";
+  /* =========================== */
+  var CLOUDINARY_CLOUD_NAME = "a9kyxvls";
+  var CLOUDINARY_UPLOAD_PRESET = "fotos-proposito";

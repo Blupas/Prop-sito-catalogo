@@ -1,12 +1,13 @@
 (function(){
   "use strict";
 
-  /* ===== CONFIGURE AQUI ===== */
-  var WHATSAPP_NUMBER = "5548999893316"; // 55 + DDD + número, só dígitos
+ /* =========================== */
+  var WHATSAPP_NUMBER = "5548999893316"; 
   var ADMIN_USER = "admin";
   var ADMIN_PASS = "proposito2026";
+  var CLOUDINARY_CLOUD_NAME = "a9kyxvls";
+  var CLOUDINARY_UPLOAD_PRESET = "fotos-proposito";
   /* =========================== */
-
 
 
   var MODELAGENS = ["Skinny","Reta","Wide Leg","Flare","Mom","Boyfriend","Slim","Reta Ampla","Jogger"];
@@ -116,17 +117,18 @@
 
   /* ============ STORAGE (Supabase: Postgres + Storage) ============ */
 
-  var PRODUTOS_BUCKET = "produtos-fotos"; // nome do bucket criado no Supabase Storage
   var sb = window.supabaseClient;
 
   // Converte uma linha da tabela "produtos" (snake_case) pro formato usado na tela (camelCase)
   function rowToProduct(row){
+    var fotosList = (row.fotos && row.fotos.length) ? row.fotos : (row.foto_url ? [row.foto_url] : []);
     return {
       id: row.id,
       nome: row.nome,
       referencia: row.referencia,
       descricao: row.descricao,
-      foto: row.foto_url || "",
+      fotos: fotosList,
+      foto: fotosList[0] || "",
       tamanhos: row.tamanhos || [],
       preco: row.preco,
       modelagem: row.modelagem,
@@ -154,16 +156,23 @@
       });
   }
 
-  // Faz upload de um arquivo pro bucket e devolve a URL pública
+  // Envia uma foto pro Cloudinary e devolve a URL pública (https)
   function uploadFoto(file){
-    var ext = (file.name.split(".").pop() || "jpg").toLowerCase();
-    var path = "produtos/" + uid() + "." + ext;
-    return sb.storage.from(PRODUTOS_BUCKET).upload(path, file, { upsert:false })
-      .then(function(res){
-        if(res.error) throw res.error;
-        var pub = sb.storage.from(PRODUTOS_BUCKET).getPublicUrl(path);
-        return pub.data.publicUrl;
+    var fd = new FormData();
+    fd.append("file", file);
+    fd.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+    return fetch("https://api.cloudinary.com/v1_1/"+CLOUDINARY_CLOUD_NAME+"/image/upload", { method:"POST", body:fd })
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        if(!data.secure_url) throw new Error((data.error && data.error.message) || "Falha no upload da foto");
+        return data.secure_url;
       });
+  }
+
+  // Pede ao Cloudinary a foto já comprimida e no tamanho certo (economiza banda do plano grátis)
+  function fotoOtimizada(url, w){
+    if(!url || url.indexOf("res.cloudinary.com") < 0 || url.indexOf("/upload/") < 0) return url;
+    return url.replace("/upload/", "/upload/f_auto,q_auto,w_"+w+"/");
   }
 
   function saveCart(){
@@ -187,9 +196,11 @@
     state.returnView = state.view === "detail" ? (state.returnView || "catalog") : state.view;
     state.selectedProductId = id;
     state.selectedSizes = [];
+    state.fotoIndex = 0;
     state.view = "detail";
     render(); window.scrollTo(0,0);
   };
+  window.setDetailPhoto = function(i){ state.fotoIndex = i; render(); };
   window.goBack = function(){
     if(state.view === "admin-form"){ closeForm(); return; }
     if(state.view === "detail"){ state.view = state.returnView || "catalog"; state.selectedProductId = null; state.selectedSizes = []; render(); window.scrollTo(0,0); return; }
@@ -325,7 +336,7 @@
   window.setAdminSearch = function(v){ state.adminSearch = v; render(); };
 
   function emptyForm(){
-    return {nome:"", referencia:"", descricao:"", foto:"", tamanhos:[], preco:"", modelagem:MODELAGENS[0], corLavagem:CORES[0], novidade:false, maisVendido:false};
+    return {nome:"", referencia:"", descricao:"", fotos:[], tamanhos:[], preco:"", modelagem:MODELAGENS[0], corLavagem:CORES[0], novidade:false, maisVendido:false};
   }
   window.openNewProduct = function(){
     state.formState = emptyForm(); state.editingId = null; state.formError="";
@@ -336,7 +347,7 @@
     if(!p) return;
     state.formState = {
       nome:p.nome, referencia:p.referencia, descricao:p.descricao,
-      foto:p.foto||"", tamanhos:p.tamanhos.slice(), preco: p.preco===null||p.preco===undefined ? "" : p.preco,
+      fotos:(p.fotos||[]).map(function(u){ return {src:u, file:null}; }), tamanhos:p.tamanhos.slice(), preco: p.preco===null||p.preco===undefined ? "" : p.preco,
       modelagem:p.modelagem, corLavagem:p.corLavagem, novidade:!!p.novidade, maisVendido:!!p.maisVendido
     };
     state.editingId = id; state.formError="";
@@ -346,19 +357,22 @@
     state.formState = null; state.editingId = null; state.view = "admin-dashboard"; render();
   };
   window.setFormField = function(k,v){ state.formState[k] = v; };
-  window.clearFormPhoto = function(){
-    state.formState.foto = "";
-    state.formState._file = null;
+  window.removeFormPhoto = function(i){
+    var ph = state.formState.fotos[i];
+    if(ph && ph.file) { try{ URL.revokeObjectURL(ph.src); }catch(e){} }
+    state.formState.fotos.splice(i,1);
     render();
   };
   window.handleFileUpload = function(input){
-    var file = input.files && input.files[0];
-    if(!file) return;
-    if(file.type.indexOf('image/') !== 0){ showToast("Escolha um arquivo de imagem."); input.value=""; return; }
-    // Guarda o arquivo real: o upload pro Supabase Storage só acontece quando o produto for salvo.
-    // Enquanto isso, mostramos uma prévia local (não sobe pra internet ainda).
-    state.formState._file = file;
-    state.formState.foto = URL.createObjectURL(file);
+    var files = Array.prototype.slice.call(input.files || []);
+    if(!files.length) return;
+    var invalid = false;
+    files.forEach(function(file){
+      if(file.type.indexOf('image/') !== 0){ invalid = true; return; }
+      // O upload pro Cloudinary só acontece ao salvar; aqui é só uma prévia local.
+      state.formState.fotos.push({ src: URL.createObjectURL(file), file: file });
+    });
+    if(invalid) showToast("Alguns arquivos não eram imagens e foram ignorados.");
     input.value = "";
     render();
   };
@@ -389,15 +403,16 @@
     var wasEditing = !!state.editingId;
     var editingId = state.editingId;
 
+    if(state.savingProduct) return;
     state.savingProduct = true; render();
 
-    // 1) se o admin escolheu uma foto nova, sobe pro Storage primeiro
-    var uploadStep = f._file ? uploadFoto(f._file) : Promise.resolve(f.foto || null);
+    // 1) sobe pro Cloudinary as fotos novas (as que já estavam salvas mantêm a URL)
+    var uploads = f.fotos.map(function(ph){ return ph.file ? uploadFoto(ph.file) : Promise.resolve(ph.src); });
 
-    uploadStep.then(function(fotoUrl){
+    Promise.all(uploads).then(function(urls){
       var row = {
         nome: f.nome, referencia: f.referencia, descricao: f.descricao,
-        foto_url: fotoUrl, tamanhos: f.tamanhos.slice(), preco: precoNum,
+        foto_url: urls[0] || null, fotos: urls, tamanhos: f.tamanhos.slice(), preco: precoNum,
         modelagem: f.modelagem, cor_lavagem: f.corLavagem,
         novidade: !!f.novidade, mais_vendido: !!f.maisVendido
       };
@@ -511,7 +526,7 @@
 
   function renderCard(p){
     var price = money(p.preco);
-    var img = p.foto ? '<img src="'+escapeAttr(p.foto)+'" alt="'+escapeAttr(p.nome)+'" loading="lazy">' : jeansIllustration(COR_HEX[p.corLavagem]);
+    var img = p.foto ? '<img src="'+escapeAttr(fotoOtimizada(p.foto,500))+'" alt="'+escapeAttr(p.nome)+'" loading="lazy">' : jeansIllustration(COR_HEX[p.corLavagem]);
     var tag = p.novidade ? '<span class="card-tag copper">Novidade</span>' : (p.maisVendido ? '<span class="card-tag">Mais vendido</span>' : '');
     return '<button class="card" onclick="openProduct(\''+p.id+'\')">'+
       '<div class="card-media">'+tag+img+'</div>'+
@@ -580,11 +595,16 @@
     var p = state.products.find(function(x){return x.id===state.selectedProductId;});
     if(!p){ return renderCatalog(); }
     var price = money(p.preco);
-    var img = p.foto ? '<img src="'+escapeAttr(p.foto)+'" alt="'+escapeAttr(p.nome)+'">' : jeansIllustration(COR_HEX[p.corLavagem], true);
+    var fotos = p.fotos || [];
+    var idx = Math.min(state.fotoIndex || 0, Math.max(fotos.length - 1, 0));
+    var img = fotos.length ? '<img src="'+escapeAttr(fotoOtimizada(fotos[idx],900))+'" alt="'+escapeAttr(p.nome)+'">' : jeansIllustration(COR_HEX[p.corLavagem], true);
+    var thumbs = fotos.length > 1 ? '<div style="display:flex;gap:8px;padding:10px 20px 0;overflow-x:auto">'+fotos.map(function(u,i){
+      return '<button type="button" onclick="setDetailPhoto('+i+')" aria-label="Ver foto '+(i+1)+'" style="flex:0 0 auto;width:64px;height:80px;padding:0;border-radius:8px;overflow:hidden;cursor:pointer;background:none;border:2px solid '+(i===idx?'var(--copper,#B8743A)':'transparent')+'"><img src="'+escapeAttr(fotoOtimizada(u,160))+'" alt="" style="width:100%;height:100%;object-fit:cover"></button>';
+    }).join('')+'</div>' : '';
     var msg = encodeURIComponent("Olá! Tenho interesse na peça \""+p.nome+"\" (ref. "+p.referencia+") do catálogo da Propósito Jeans.");
     return '<div class="view">'+
       renderHeader(true, "Detalhes do produto")+
-      '<div class="pd-media">'+img+'</div>'+
+      '<div class="pd-media">'+img+'</div>'+thumbs+
       '<div class="pd-body">'+
         '<div class="pd-ref">REF. '+escapeAttr(p.referencia)+'</div>'+
         '<h1 class="pd-name">'+escapeAttr(p.nome)+'</h1>'+
@@ -737,22 +757,26 @@
   function renderAdminForm(){
     var f = state.formState;
     var isEdit = !!state.editingId;
-    var previewImg = f.foto ? '<img src="'+escapeAttr(f.foto)+'" alt="Pré-visualização" onerror="this.style.display=\'none\'">' : jeansIllustration(COR_HEX[f.corLavagem]);
+    var photosGrid = f.fotos.length
+      ? '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px">'+f.fotos.map(function(ph,i){
+          return '<div style="position:relative;aspect-ratio:4/5;border-radius:10px;overflow:hidden;background:#EFEDE4">'+
+            '<img src="'+escapeAttr(ph.src)+'" alt="" style="width:100%;height:100%;object-fit:cover">'+
+            (i===0 ? '<span style="position:absolute;left:6px;bottom:6px;background:rgba(0,0,0,.65);color:#fff;font-size:11px;padding:2px 7px;border-radius:99px">Capa</span>' : '')+
+            '<button type="button" onclick="removeFormPhoto('+i+')" aria-label="Remover foto" style="position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;border:none;background:rgba(0,0,0,.65);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:5px">'+ICON.close+'</button>'+
+          '</div>';
+        }).join('')+'</div>'
+      : '<div style="width:96px;height:120px;border-radius:10px;overflow:hidden;margin-bottom:10px">'+jeansIllustration(COR_HEX[f.corLavagem])+'</div>';
     return '<div class="view">'+
       renderHeader(true, isEdit ? "Editar produto" : "Adicionar produto", false)+
       '<div style="max-width:560px;margin:0 auto;padding:18px 20px 60px;">'+
         (state.formError ? '<div class="error-text">'+state.formError+'</div>' : '')+
 
-        '<div class="field"><label>Foto do produto</label>'+
-          '<div class="photo-picker">'+
-            '<div class="photo-preview">'+(state.formPhotoLoading ? '<div class="photo-loading">Processando foto…</div>' : previewImg)+
-              (f.foto ? '<button type="button" class="photo-remove" onclick="clearFormPhoto()" aria-label="Remover foto">'+ICON.close+'</button>' : '')+
-            '</div>'+
-            '<label class="btn btn-ghost btn-sm photo-upload-btn">'+ICON.plus+' '+(f.foto ? 'Trocar foto' : 'Enviar foto do celular')+
-              '<input type="file" accept="image/*" style="display:none" onchange="handleFileUpload(this)">'+
-            '</label>'+
-          '</div>'+
-          '<div class="field-hint">Escolha uma foto da galeria do celular. Sem foto? A peça aparece com uma ilustração no lugar dela.</div>'+
+        '<div class="field"><label>Fotos do produto</label>'+
+          photosGrid+
+          '<label class="btn btn-ghost btn-sm photo-upload-btn">'+ICON.plus+' '+(f.fotos.length ? 'Adicionar mais fotos' : 'Enviar fotos')+
+            '<input type="file" accept="image/*" multiple style="display:none" onchange="handleFileUpload(this)">'+
+          '</label>'+
+          '<div class="field-hint">Pode escolher várias fotos de uma vez. A primeira é a capa. Sem foto? A peça aparece com uma ilustração.</div>'+
         '</div>'+
 
         '<div class="field"><label for="f-nome">Nome do produto</label><input id="f-nome" type="text" placeholder="Ex: Calça Jeans Skinny Cintura Alta" value="'+escapeAttr(f.nome)+'" oninput="setFormField(\'nome\', this.value)"></div>'+
@@ -779,7 +803,7 @@
 
         '<div style="display:flex;gap:10px;margin-top:24px;">'+
           '<button class="btn btn-ghost" onclick="closeForm()">Cancelar</button>'+
-          '<button class="btn btn-primary" onclick="saveProduct()">Salvar produto</button>'+
+          '<button class="btn btn-primary" onclick="saveProduct()"'+(state.savingProduct?' disabled':'')+'>'+(state.savingProduct?'Salvando…':'Salvar produto')+'</button>'+
         '</div>'+
       '</div>'+
     '</div>';
