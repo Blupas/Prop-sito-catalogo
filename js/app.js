@@ -108,20 +108,66 @@
     ];
   }
 
-  /* ============ STORAGE ============ */
+  /* ============ STORAGE (Supabase: Postgres + Storage) ============ */
 
-  function saveProducts(list, silent){
-    return window.storage.set(STORAGE_KEY, JSON.stringify(list), true).then(function(){
-      state.storageError = false;
-      if(!silent) render();
-    }).catch(function(){
-      state.storageError = true;
-      if(!silent) render();
-    });
+  var PRODUTOS_BUCKET = "produtos-fotos"; // nome do bucket criado no Supabase Storage
+  var sb = window.supabaseClient;
+
+  // Converte uma linha da tabela "produtos" (snake_case) pro formato usado na tela (camelCase)
+  function rowToProduct(row){
+    return {
+      id: row.id,
+      nome: row.nome,
+      referencia: row.referencia,
+      descricao: row.descricao,
+      foto: row.foto_url || "",
+      tamanhos: row.tamanhos || [],
+      preco: row.preco,
+      modelagem: row.modelagem,
+      corLavagem: row.cor_lavagem,
+      novidade: !!row.novidade,
+      maisVendido: !!row.mais_vendido,
+      dataCadastro: row.criado_em
+    };
+  }
+
+  function loadProducts(){
+    state.loading = true; render();
+    return sb.from("produtos").select("*").order("criado_em", { ascending:false })
+      .then(function(res){
+        if(res.error) throw res.error;
+        state.products = (res.data||[]).map(rowToProduct);
+        state.storageError = false;
+      })
+      .catch(function(err){
+        console.error("Erro ao carregar produtos:", err);
+        state.storageError = true;
+      })
+      .then(function(){
+        state.loading = false; render();
+      });
+  }
+
+  // Faz upload de um arquivo pro bucket e devolve a URL pública
+  function uploadFoto(file){
+    var ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+    var path = "produtos/" + uid() + "." + ext;
+    return sb.storage.from(PRODUTOS_BUCKET).upload(path, file, { upsert:false })
+      .then(function(res){
+        if(res.error) throw res.error;
+        var pub = sb.storage.from(PRODUTOS_BUCKET).getPublicUrl(path);
+        return pub.data.publicUrl;
+      });
   }
 
   function saveCart(){
-    window.storage.set(CART_STORAGE_KEY, JSON.stringify(state.cart), false).catch(function(){});
+    try{ localStorage.setItem("carrinho_jeans", JSON.stringify(state.cart)); }catch(e){}
+  }
+  function loadCart(){
+    try{
+      var raw = localStorage.getItem("carrinho_jeans");
+      state.cart = raw ? JSON.parse(raw) : [];
+    }catch(e){ state.cart = []; }
   }
 
   /* ============ ROUTING (in-memory, no hash — reliable inside the artifact iframe) ============ */
@@ -296,44 +342,19 @@
   window.setFormField = function(k,v){ state.formState[k] = v; };
   window.clearFormPhoto = function(){
     state.formState.foto = "";
+    state.formState._file = null;
     render();
   };
   window.handleFileUpload = function(input){
     var file = input.files && input.files[0];
     if(!file) return;
     if(file.type.indexOf('image/') !== 0){ showToast("Escolha um arquivo de imagem."); input.value=""; return; }
-    state.formPhotoLoading = true; render();
-    var reader = new FileReader();
-    reader.onload = function(e){
-      var img = new Image();
-      img.onload = function(){
-        var maxW = 800;
-        var scale = Math.min(1, maxW / img.width);
-        var w = Math.max(1, Math.round(img.width * scale));
-        var h = Math.max(1, Math.round(img.height * scale));
-        var canvas = document.createElement('canvas');
-        canvas.width = w; canvas.height = h;
-        var ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, w, h);
-        var dataUrl = canvas.toDataURL('image/jpeg', 0.8);
-        state.formState.foto = dataUrl;
-        state.formPhotoLoading = false;
-        input.value = "";
-        render();
-      };
-      img.onerror = function(){
-        state.formPhotoLoading = false;
-        showToast("Não foi possível ler essa imagem.");
-        render();
-      };
-      img.src = e.target.result;
-    };
-    reader.onerror = function(){
-      state.formPhotoLoading = false;
-      showToast("Não foi possível ler esse arquivo.");
-      render();
-    };
-    reader.readAsDataURL(file);
+    // Guarda o arquivo real: o upload pro Supabase Storage só acontece quando o produto for salvo.
+    // Enquanto isso, mostramos uma prévia local (não sobe pra internet ainda).
+    state.formState._file = file;
+    state.formState.foto = URL.createObjectURL(file);
+    input.value = "";
+    render();
   };
   window.toggleFormSize = function(sz){
     var arr = state.formState.tamanhos;
@@ -359,38 +380,55 @@
     var precoNum = f.preco === "" ? null : Number(f.preco.replace(",", "."));
     if(f.preco !== "" && isNaN(precoNum)){ state.formError = "Preço inválido."; render(); return; }
 
-    if(state.editingId){
-      var idx = state.products.findIndex(function(x){return x.id===state.editingId;});
-      if(idx>-1){
-        var prev = state.products[idx];
-        state.products[idx] = Object.assign({}, prev, {
-          nome:f.nome, referencia:f.referencia, descricao:f.descricao,
-          foto:f.foto, tamanhos:f.tamanhos.slice(), preco:precoNum, modelagem:f.modelagem, corLavagem:f.corLavagem,
-          novidade:!!f.novidade, maisVendido:!!f.maisVendido
-        });
-      }
-    } else {
-      state.products.unshift({
-        id:uid(), nome:f.nome, referencia:f.referencia, descricao:f.descricao,
-        foto:f.foto, tamanhos:f.tamanhos.slice(), preco:precoNum, modelagem:f.modelagem, corLavagem:f.corLavagem,
-        novidade:!!f.novidade, maisVendido:!!f.maisVendido, dataCadastro:new Date().toISOString()
-      });
-    }
     var wasEditing = !!state.editingId;
-    saveProducts(state.products).then(function(){
+    var editingId = state.editingId;
+
+    state.savingProduct = true; render();
+
+    // 1) se o admin escolheu uma foto nova, sobe pro Storage primeiro
+    var uploadStep = f._file ? uploadFoto(f._file) : Promise.resolve(f.foto || null);
+
+    uploadStep.then(function(fotoUrl){
+      var row = {
+        nome: f.nome, referencia: f.referencia, descricao: f.descricao,
+        foto_url: fotoUrl, tamanhos: f.tamanhos.slice(), preco: precoNum,
+        modelagem: f.modelagem, cor_lavagem: f.corLavagem,
+        novidade: !!f.novidade, mais_vendido: !!f.maisVendido
+      };
+
+      if(wasEditing){
+        return sb.from("produtos").update(row).eq("id", editingId).select();
+      } else {
+        return sb.from("produtos").insert(row).select();
+      }
+    }).then(function(res){
+      if(res.error) throw res.error;
+      state.savingProduct = false;
+      state.formState = null; state.editingId = null; state.formError = "";
+      state.view = "admin-dashboard";
       showToast(wasEditing ? "Produto atualizado com sucesso." : "Produto adicionado ao catálogo.");
+      loadProducts(); // recarrega a lista já com os dados salvos no Postgres
+    }).catch(function(err){
+      console.error("Erro ao salvar produto:", err);
+      state.savingProduct = false;
+      state.formError = "Não foi possível salvar. Verifique sua internet e tente novamente.";
+      render();
     });
-    state.formState = null; state.editingId = null; state.formError="";
-    state.view = "admin-dashboard"; render();
   };
 
   window.askDelete = function(id){ state.deleteConfirmId = id; render(); };
   window.cancelDelete = function(){ state.deleteConfirmId = null; render(); };
   window.confirmDelete = function(){
     var id = state.deleteConfirmId;
-    state.products = state.products.filter(function(p){return p.id!==id;});
     state.deleteConfirmId = null;
-    saveProducts(state.products).then(function(){ showToast("Produto excluído."); });
+    sb.from("produtos").delete().eq("id", id).then(function(res){
+      if(res.error) throw res.error;
+      showToast("Produto excluído.");
+      loadProducts();
+    }).catch(function(err){
+      console.error("Erro ao excluir produto:", err);
+      showToast("Não foi possível excluir. Tente novamente.");
+    });
     render();
   };
 
