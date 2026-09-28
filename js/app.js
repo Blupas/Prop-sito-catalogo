@@ -1,6 +1,12 @@
 (function(){
   "use strict";
 
+  /* ===== CONFIGURE AQUI ===== */
+  var WHATSAPP_NUMBER = "5548999893316"; // 55 + DDD + número, só dígitos
+  var ADMIN_USER = "admin";
+  var ADMIN_PASS = "proposito2026";
+  /* =========================== */
+
 
 
   var MODELAGENS = ["Skinny","Reta","Wide Leg","Flare","Mom","Boyfriend","Slim","Reta Ampla","Jogger"];
